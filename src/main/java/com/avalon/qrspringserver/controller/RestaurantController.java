@@ -4,6 +4,7 @@ import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,7 @@ public class RestaurantController {
         if (body.getName() != null) {
             findRestaurant.setName(body.getName());
         }
+        findRestaurant.setUpdatedAt(new Date());
         return repository.save(findRestaurant);
 
     }
