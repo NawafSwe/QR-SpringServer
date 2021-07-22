@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,11 +17,10 @@ public class Restaurant {
     @GeneratedValue
     @Id
     String id;
-
-
     private String name;
-    // db ref
-    //private List<Menu> menus;
+    @OneToMany
+    @JoinColumn(name = "PK_Menu", nullable = false)
+    private List<Menu> menus;
     @Column(unique = true)
     private String url;
     @Column(unique = true)
