@@ -29,7 +29,12 @@ public class RestaurantController {
 
     @PostMapping(path = "")
     Restaurant post(@RequestBody Restaurant body) {
-        Restaurant addRestaurant = repository.save(body);
-        return addRestaurant;
+        return repository.save(body);
+    }
+
+
+    @DeleteMapping(path = "/{id}")
+    void delete(@PathVariable String id) {
+        repository.deleteById(id);
     }
 }
