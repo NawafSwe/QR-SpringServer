@@ -1,5 +1,6 @@
 package com.avalon.qrspringserver.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "Menu")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Menu {
     private @Id
     @GeneratedValue(generator="system-uuid")

@@ -1,5 +1,6 @@
 package com.avalon.qrspringserver.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import java.util.Date;
 @ToString
 @Entity
 @Table(name = "Item")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Item {
     private
     @GeneratedValue(generator = "system-uuid")
