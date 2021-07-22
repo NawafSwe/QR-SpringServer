@@ -33,6 +33,20 @@ public class RestaurantController {
     }
 
 
+    @PutMapping(path = "/{id}")
+    Restaurant update(@RequestBody Restaurant body, @PathVariable String id) {
+        Restaurant findRestaurant = repository.findById(id)
+                .orElseThrow();
+        if (body.getEmail() != null) {
+            findRestaurant.setEmail(body.getEmail());
+        }
+        if (body.getName() != null) {
+            findRestaurant.setName(body.getName());
+        }
+        return repository.save(findRestaurant);
+
+    }
+
     @DeleteMapping(path = "/{id}")
     void delete(@PathVariable String id) {
         repository.deleteById(id);

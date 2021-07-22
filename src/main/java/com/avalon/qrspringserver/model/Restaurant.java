@@ -34,11 +34,9 @@ public class Restaurant {
     private String qr;
     @Column(unique = true, nullable = false)
     private String email;
-
     @CreationTimestamp
+    @Column(updatable = false)
     private Date createdAt;
-
     @UpdateTimestamp
     private Date updatedAt;
-
 }
