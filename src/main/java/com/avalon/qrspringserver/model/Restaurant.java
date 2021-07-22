@@ -1,8 +1,7 @@
 package com.avalon.qrspringserver.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,6 +16,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "Restaurant")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Restaurant {
     private
     @GeneratedValue(generator = "system-uuid")
@@ -34,11 +34,9 @@ public class Restaurant {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column(updatable = false)
     private Date createdAt;
     @UpdateTimestamp
-    @JsonIgnore
     private Date updatedAt;
 }

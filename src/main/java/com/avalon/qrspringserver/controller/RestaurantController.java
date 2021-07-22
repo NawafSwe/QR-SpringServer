@@ -2,8 +2,12 @@ package com.avalon.qrspringserver.controller;
 
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +19,7 @@ public class RestaurantController {
 
     public RestaurantController(RestaurantRepository repository) {
         this.repository = repository;
+
     }
 
     @GetMapping(path = "")
@@ -35,17 +40,19 @@ public class RestaurantController {
 
 
     @PutMapping(path = "/{id}")
-    Restaurant update(@RequestBody Restaurant body, @PathVariable String id) {
+    Restaurant update(HttpServletRequest request, @PathVariable String id) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
         Restaurant findRestaurant = repository.findById(id)
                 .orElseThrow();
-        body.setUpdatedAt(new Date());
-        body.setId(id);
-        return repository.save(body);
-
+        // body.setUpdatedAt(new Date());
+        Restaurant updateRestaurant = mapper.readerForUpdating(findRestaurant).readValue(request.getReader());
+        repository.saveAndFlush(updateRestaurant);
+        return repository.saveAndFlush(updateRestaurant);
     }
 
     @DeleteMapping(path = "/{id}")
     void delete(@PathVariable String id) {
         repository.deleteById(id);
+
     }
 }
