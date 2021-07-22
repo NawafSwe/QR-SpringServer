@@ -1,9 +1,7 @@
 package com.avalon.qrspringserver.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -36,9 +34,9 @@ public class Restaurant {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
     @CreationTimestamp
     @Column(updatable = false)
-    @JsonIgnore
     private Date createdAt;
     @UpdateTimestamp
     @JsonIgnore

@@ -38,16 +38,9 @@ public class RestaurantController {
     Restaurant update(@RequestBody Restaurant body, @PathVariable String id) {
         Restaurant findRestaurant = repository.findById(id)
                 .orElseThrow();
-        if (body.getEmail() != null) {
-            findRestaurant.setEmail(body.getEmail());
-        }
-        if (body.getName() != null) {
-            findRestaurant.setName(body.getName());
-        }
-
-        findRestaurant.setUpdatedAt(new Date());
-
-        return repository.save(findRestaurant);
+        body.setUpdatedAt(new Date());
+        body.setId(id);
+        return repository.save(body);
 
     }
 
