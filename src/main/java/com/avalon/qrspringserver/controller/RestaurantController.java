@@ -44,9 +44,8 @@ public class RestaurantController {
         ObjectMapper mapper = new ObjectMapper();
         Restaurant findRestaurant = repository.findById(id)
                 .orElseThrow();
-        // body.setUpdatedAt(new Date());
         Restaurant updateRestaurant = mapper.readerForUpdating(findRestaurant).readValue(request.getReader());
-        repository.saveAndFlush(updateRestaurant);
+        findRestaurant.setUpdatedAt(new Date());
         return repository.saveAndFlush(updateRestaurant);
     }
 
