@@ -16,7 +16,7 @@ public class MenuController {
         this.repository = repository;
     }
 
-    @GetMapping
+    @GetMapping(path="")
     List<Menu> all() {
         return repository.findAll();
     }
@@ -26,7 +26,7 @@ public class MenuController {
         return repository.findById(id);
     }
 
-    @PostMapping
+    @PostMapping(path = "")
     Menu post(@RequestBody Menu body) {
         return repository.save(body);
     }

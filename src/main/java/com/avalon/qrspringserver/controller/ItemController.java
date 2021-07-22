@@ -16,7 +16,7 @@ public class ItemController {
         this.repository = repository;
     }
 
-    @GetMapping
+    @GetMapping(path = "")
     List<Item> all() {
         return repository.findAll();
     }
@@ -26,19 +26,19 @@ public class ItemController {
         return repository.findById(id);
     }
 
-    @PostMapping
+    @PostMapping(path = "")
     Item post(@RequestBody Item body) {
         return repository.save(body);
     }
 
-    @PutMapping(path = "/${id}")
+    @PutMapping(path = "/{id}")
     Item put(@RequestBody Item body, @PathVariable String id) {
         Item findItem = repository.findById(id).orElseThrow();
         // compare and update
         return findItem;
     }
 
-    @DeleteMapping(path = "/${id}")
+    @DeleteMapping(path = "/{id}")
     void delete(@PathVariable String id) {
         repository.deleteById(id);
     }

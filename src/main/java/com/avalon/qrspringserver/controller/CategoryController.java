@@ -16,7 +16,7 @@ public class CategoryController {
         this.repository = repository;
     }
 
-    @GetMapping
+    @GetMapping(path = "")
     List<Category> all() {
         return repository.findAll();
     }
@@ -26,7 +26,7 @@ public class CategoryController {
         return repository.findById(id);
     }
 
-    @PostMapping
+    @PostMapping(path = "")
     Category post(@RequestBody Category body) {
         return repository.save(body);
     }
