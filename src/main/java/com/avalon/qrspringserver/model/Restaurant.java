@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,18 +17,19 @@ import java.util.List;
 @Table(name = "Restaurant")
 public class Restaurant {
     private
-    @GeneratedValue
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
     @Id
     String id;
     private String name;
     @OneToMany
-    @JoinColumn(name = "PK_Menu", nullable = false)
+    @JoinColumn(name = "PK_Menu", nullable = true)
     private List<Menu> menus;
-    @Column(unique = true)
+    @Column(unique = true, nullable = true)
     private String url;
-    @Column(unique = true)
+    @Column(unique = true, nullable = true)
     private String qr;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
 }

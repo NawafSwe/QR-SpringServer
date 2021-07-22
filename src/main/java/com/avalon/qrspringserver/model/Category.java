@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,8 +17,10 @@ import java.util.List;
 @Entity
 @Table(name = "Category")
 public class Category {
-    private @Id
-    @GeneratedValue
+    private
+    @Id
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
     String id;
 
     @OneToMany
