@@ -1,4 +1,4 @@
-package com.avalon.qrspringserver.utils;
+package com.avalon.qrspringserver.utils.assembler;
 
 import com.avalon.qrspringserver.model.Restaurant;
 import org.springframework.hateoas.EntityModel;
