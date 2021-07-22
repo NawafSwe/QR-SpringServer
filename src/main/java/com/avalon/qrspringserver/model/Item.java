@@ -4,9 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,4 +27,10 @@ public class Item {
     private Float price;
     // cannot set array of thing, it must be extracted to another class
     // private String[] images;
+
+    @CreationTimestamp
+    private Date createdAt;
+
+    @UpdateTimestamp
+    private Date updatedAt;
 }
