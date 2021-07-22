@@ -31,6 +31,7 @@ public class Restaurant {
     private String url;
     @Column(unique = true, nullable = true)
     private String qr;
+
     @Column(unique = true, nullable = false)
     private String email;
 

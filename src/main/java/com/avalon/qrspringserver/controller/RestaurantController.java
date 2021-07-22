@@ -42,10 +42,24 @@ public class RestaurantController {
     }
 
     @PostMapping(path = "")
-    Restaurant post(@RequestBody Restaurant body) {
-        return repository.save(body);
+    ResponseEntity<?> post(@RequestBody Restaurant body) {
+        try {
+            // for validating restaurant to throw relative error message
+//            Restaurant fnRestaurant = repository.findByEmail(body.getEmail());
+//            System.out.println("found rest with id: " + fnRestaurant);
+            Restaurant newRestaurant = repository.save(body);
+            return ResponseEntity
+                    .ok(newRestaurant);
+        } catch (Exception error) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
+                    .body(Problem.create()
+                            .withTitle("Internal Server Error")
+                            .withDetail("Server cannot handle the request, if problem persist contact the team")
+                    );
+        }
     }
-
 
     @PutMapping(path = "/{id}")
     ResponseEntity<?> update(HttpServletRequest request, @PathVariable String id) {
@@ -62,8 +76,7 @@ public class RestaurantController {
                     .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
                     .body(Problem.create()
                             .withTitle("Internal Server Error")
-                            .withDetail("Error while mapping, internal server Error")
-                    );
+                            .withDetail("Error while mapping, internal server Error"));
         }
     }
 
