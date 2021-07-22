@@ -1,4 +1,4 @@
-package model;
+package com.avalon.qrspringserver.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
