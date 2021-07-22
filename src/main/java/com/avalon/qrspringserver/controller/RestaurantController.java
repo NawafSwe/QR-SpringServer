@@ -44,7 +44,9 @@ public class RestaurantController {
         if (body.getName() != null) {
             findRestaurant.setName(body.getName());
         }
+
         findRestaurant.setUpdatedAt(new Date());
+
         return repository.save(findRestaurant);
 
     }
