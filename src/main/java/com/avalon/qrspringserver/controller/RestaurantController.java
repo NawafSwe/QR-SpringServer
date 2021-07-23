@@ -8,15 +8,10 @@ import com.avalon.qrspringserver.utils.assembler.RestaurantAssembler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.mediatype.problem.Problem;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.rmi.ServerError;
 import java.util.Date;
 
 @RestController
