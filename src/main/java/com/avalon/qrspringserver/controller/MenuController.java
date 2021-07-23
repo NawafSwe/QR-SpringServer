@@ -29,7 +29,7 @@ public class MenuController {
     }
 
     @GetMapping(path = "restaurants/{id}/menus")
-    List<Menu> listAllRestaurantMenus(@PathVariable String id) {
+    public List<Menu> listAllRestaurantMenus(@PathVariable String id) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
         return restaurant.getMenus();
     }
@@ -40,7 +40,7 @@ public class MenuController {
     }
 
     @PostMapping(path = "restaurants/{id}/menus")
-    Menu post(@RequestBody Menu body, @PathVariable String id) {
+    public Menu post(@RequestBody Menu body, @PathVariable String id) {
         // else throw restaurant not found
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
         Menu savedMenu = repository.save(body);
@@ -50,7 +50,7 @@ public class MenuController {
     }
 
     @PutMapping(path = "menus/{id}")
-    ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) {
         try {
             Menu findMenu = repository.findById(id).orElseThrow();
             ObjectMapper mapper = new ObjectMapper();
@@ -70,7 +70,7 @@ public class MenuController {
     }
 
     @DeleteMapping(path = "menus/{id}")
-    void delete(@PathVariable String id) {
+    public void delete(@PathVariable String id) {
         // make sure to find
         repository.deleteById(id);
     }
