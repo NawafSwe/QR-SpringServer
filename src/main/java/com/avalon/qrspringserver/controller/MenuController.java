@@ -4,8 +4,16 @@ import com.avalon.qrspringserver.model.Menu;
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.MenuRepository;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.mediatype.problem.Problem;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +29,7 @@ public class MenuController {
     }
 
     @GetMapping(path = "restaurants/{id}/menus")
-    List<Menu> all(@PathVariable String id) {
+    List<Menu> listAllRestaurantMenus(@PathVariable String id) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
         return restaurant.getMenus();
     }
@@ -41,10 +49,23 @@ public class MenuController {
     }
 
     @PutMapping(path = "menus/{id}")
-    Optional<Menu> put(@RequestBody Menu body, @PathVariable String id) {
-        Optional<Menu> findMenu = repository.findById(id);
-        // compare then save and return
-        return findMenu;
+    ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) {
+        try {
+            Menu findMenu = repository.findById(id).orElseThrow();
+            ObjectMapper mapper = new ObjectMapper();
+            Menu updatedMenu = mapper.readerForUpdating(findMenu).readValue(request.getReader());
+            updatedMenu.setUpdatedAt(new Date());
+            repository.save(updatedMenu);
+            return ResponseEntity
+                    .ok(updatedMenu);
+
+        } catch (Exception error) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
+                    .body(Problem.create()
+                            .withTitle("Internal Server Error")
+                            .withDetail("Error while mapping, internal server Error"));
+        }
     }
 
     @DeleteMapping(path = "menus/{id}")
