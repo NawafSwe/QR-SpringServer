@@ -1,6 +1,7 @@
 package com.avalon.qrspringserver.controller;
 
 import com.avalon.qrspringserver.error.ServerError;
+import com.avalon.qrspringserver.error.restaurantErrors.RestaurantDuplicatedEmail;
 import com.avalon.qrspringserver.error.restaurantErrors.RestaurantNotFound;
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
@@ -45,21 +46,14 @@ public class RestaurantController {
     @PostMapping(path = "")
     ResponseEntity<?> post(@RequestBody Restaurant body) {
         try {
-            // creating Advice controller
             // for validating restaurant to throw relative error message
-            // Restaurant fnRestaurant = repository.findByEmail(body.getEmail());
-            // System.out.println("found rest with id: " + fnRestaurant);
+            Restaurant foundRestaurant = repository.findByEmail(body.getEmail());
+            if (foundRestaurant != null) throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
             Restaurant newRestaurant = repository.save(body);
             return ResponseEntity
                     .ok(newRestaurant);
         } catch (Exception error) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
-                    .body(Problem.create()
-                            .withTitle("Internal Server Error")
-                            .withDetail("Server cannot handle the request, if problem persist contact the team")
-                    );
+            throw new ServerError("Internal Server Error");
         }
     }
 

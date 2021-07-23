@@ -27,9 +27,9 @@ public class Restaurant {
     @OneToMany
     @JoinColumn(name = "PK_Menu", nullable = true)
     private List<Menu> menus;
-    @Column(unique = true, nullable = true)
+    @Column(nullable = true)
     private String url;
-    @Column(unique = true, nullable = true)
+    @Column(nullable = true)
     private String qr;
 
     @Column(unique = true, nullable = false)
@@ -40,4 +40,6 @@ public class Restaurant {
     private Date createdAt;
     @UpdateTimestamp
     private Date updatedAt;
+
+
 }
