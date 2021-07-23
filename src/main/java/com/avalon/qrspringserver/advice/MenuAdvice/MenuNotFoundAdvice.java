@@ -17,7 +17,7 @@ public class MenuNotFoundAdvice {
     public HashMap<String, String> message(MenuNotFound ex) {
         HashMap<String, String> map = new HashMap<>();
         map.put("message", ex.getMessage());
-        map.put("status", "404");
+        map.put("status", HttpStatus.NOT_FOUND.name());
         return map;
     }
 }

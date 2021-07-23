@@ -17,7 +17,7 @@ public class RestaurantDuplicatedEmailAdvice {
     @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Restaurant Email is Already in use")
     HashMap<String, String> message(RestaurantDuplicatedEmail ex) {
         HashMap<String, String> map = new HashMap<>();
-        map.put("status", "409");
+        map.put("status", HttpStatus.CONFLICT.name());
         map.put("message", ex.getMessage());
         return map;
     }
