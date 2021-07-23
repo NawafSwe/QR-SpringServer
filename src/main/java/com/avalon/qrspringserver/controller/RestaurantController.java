@@ -6,6 +6,8 @@ import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
 import com.avalon.qrspringserver.utils.assembler.RestaurantAssembler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +31,7 @@ public class RestaurantController {
     }
 
     @GetMapping(path = "")
-    public ResponseEntity<?> all() throws Exception {
+    public ResponseEntity<?> all() {
         return ResponseEntity.ok(repository.findAll().stream().map(assembler::toModel));
     }
 
@@ -41,13 +43,13 @@ public class RestaurantController {
     }
 
     @PostMapping(path = "")
-    public ResponseEntity<?> post(@RequestBody Restaurant body) throws RestaurantDuplicatedEmail {
+    public ResponseEntity<?> post(@RequestBody Restaurant body) {
         Restaurant foundRestaurant = repository.findByEmail(body.getEmail());
         if (foundRestaurant != null) throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
-        Restaurant newRestaurant = repository.save(body);
-
+        EntityModel<Restaurant> restaurantEntityModel = assembler.toModel(repository.save(body));
         return ResponseEntity
-                .ok(newRestaurant);
+                .created(restaurantEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(restaurantEntityModel);
     }
 
     @PutMapping(path = "/{id}")

@@ -11,11 +11,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class RestaurantAssembler implements RepresentationModelAssembler<Restaurant, EntityModel<Restaurant>> {
+
     @Override
     public EntityModel<Restaurant> toModel(Restaurant entity) {
         return EntityModel.of(entity,
-                linkTo(methodOn(RestaurantController.class).one(entity.getId()) ).withSelfRel()
-
+                linkTo(methodOn(RestaurantController.class).one(entity.getId())).withSelfRel(),
+                linkTo(methodOn(RestaurantController.class).all()).withRel("restaurants")
         );
+
     }
 }
