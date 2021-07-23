@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.rmi.ServerError;
 import java.util.Date;
 
 @RestController
@@ -45,30 +46,25 @@ public class RestaurantController {
     @PostMapping(path = "")
     public ResponseEntity<?> post(@RequestBody Restaurant body) {
         Restaurant foundRestaurant = repository.findByEmail(body.getEmail());
-        if (foundRestaurant != null) throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
+        if (foundRestaurant != null) {
+            throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
+        }
         EntityModel<Restaurant> restaurantEntityModel = assembler.toModel(repository.save(body));
-        return ResponseEntity
-                .created(restaurantEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+        return ResponseEntity.
+                created(restaurantEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(restaurantEntityModel);
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<?> update(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<?> update(HttpServletRequest request, @PathVariable String id) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        Restaurant findRestaurant = repository.findById(id).orElseThrow();
-        try {
-            Restaurant updateRestaurant = mapper.readerForUpdating(findRestaurant).readValue(request.getReader());
-            updateRestaurant.setUpdatedAt(new Date());
-            repository.save(updateRestaurant);
-            return ResponseEntity
-                    .ok(updateRestaurant);
-        } catch (Exception error) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
-                    .body(Problem.create()
-                            .withTitle("Internal Server Error")
-                            .withDetail("Error while mapping, internal server Error"));
-        }
+        Restaurant findRestaurant = repository.findById(id)
+                .orElseThrow(() -> new RestaurantNotFound("Restaurant with id: " + id + " Not Found"));
+
+        Restaurant updateRestaurant = mapper.readerForUpdating(findRestaurant).readValue(request.getReader());
+        updateRestaurant.setUpdatedAt(new Date());
+        EntityModel<Restaurant> restaurantEntityModel = assembler.toModel(repository.save(updateRestaurant));
+        return ResponseEntity.ok(restaurantEntityModel);
     }
 
     @DeleteMapping(path = "/{id}")

@@ -20,6 +20,5 @@ public class RestaurantDuplicatedEmailAdvice {
         map.put("status", "409");
         map.put("StatusText", HttpStatus.CONFLICT.name());
         return map;
-
     }
 }
