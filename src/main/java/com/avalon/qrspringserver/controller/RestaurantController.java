@@ -1,6 +1,5 @@
 package com.avalon.qrspringserver.controller;
 
-import com.avalon.qrspringserver.error.ServerError;
 import com.avalon.qrspringserver.error.restaurantErrors.RestaurantDuplicatedEmail;
 import com.avalon.qrspringserver.error.restaurantErrors.RestaurantNotFound;
 import com.avalon.qrspringserver.model.Restaurant;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "restaurants")
@@ -28,12 +26,8 @@ public class RestaurantController {
     }
 
     @GetMapping(path = "")
-    ResponseEntity<?> all() {
-        try {
-            return ResponseEntity.ok(repository.findAll());
-        } catch (Exception error) {
-            throw new ServerError("Internal Server Error");
-        }
+    ResponseEntity<?> all() throws Exception {
+        return ResponseEntity.ok(repository.findAll());
     }
 
 
@@ -44,17 +38,12 @@ public class RestaurantController {
     }
 
     @PostMapping(path = "")
-    ResponseEntity<?> post(@RequestBody Restaurant body) {
-        try {
-            // for validating restaurant to throw relative error message
-            Restaurant foundRestaurant = repository.findByEmail(body.getEmail());
-            if (foundRestaurant != null) throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
-            Restaurant newRestaurant = repository.save(body);
-            return ResponseEntity
-                    .ok(newRestaurant);
-        } catch (Exception error) {
-            throw new ServerError("Internal Server Error");
-        }
+    ResponseEntity<?> post(@RequestBody Restaurant body) throws RestaurantDuplicatedEmail {
+        Restaurant foundRestaurant = repository.findByEmail(body.getEmail());
+        if (foundRestaurant != null) throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
+        Restaurant newRestaurant = repository.save(body);
+        return ResponseEntity
+                .ok(newRestaurant);
     }
 
     @PutMapping(path = "/{id}")

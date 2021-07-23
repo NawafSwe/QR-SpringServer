@@ -15,9 +15,8 @@ public class RestaurantDuplicatedEmailAdvice {
     @ResponseBody
     @ExceptionHandler(RestaurantDuplicatedEmail.class)
     @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Restaurant Email is Already in use")
-    HashMap<String, String> message(String message) {
+    HashMap<String, String> message() {
         HashMap<String, String> map = new HashMap<>();
-        map.put("message", message);
         map.put("status", "409");
         map.put("StatusText", HttpStatus.CONFLICT.name());
         return map;
