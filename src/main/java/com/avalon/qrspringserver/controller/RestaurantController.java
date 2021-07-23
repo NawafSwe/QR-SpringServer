@@ -44,7 +44,8 @@ public class RestaurantController {
         if (foundRestaurant != null) {
             throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
         }
-        EntityModel<Restaurant> restaurantEntityModel = assembler.toModel(repository.save(body));
+        Restaurant newRestaurant = repository.save(body);
+        EntityModel<Restaurant> restaurantEntityModel = assembler.toModel(newRestaurant);
         return ResponseEntity.
                 created(restaurantEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(restaurantEntityModel);
