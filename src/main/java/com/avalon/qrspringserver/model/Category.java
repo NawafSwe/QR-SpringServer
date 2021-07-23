@@ -29,8 +29,11 @@ public class Category {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     String id;
 
+    private String name;
+    private String description;
+
     @OneToMany
-    @JoinColumn(name = "FK_Item", nullable = false)
+    @JoinColumn(name = "FK_Item", nullable = true)
     private List<Item> items;
 
     @CreationTimestamp

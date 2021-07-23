@@ -1,6 +1,8 @@
 package com.avalon.qrspringserver.controller;
 
+import com.avalon.qrspringserver.model.Category;
 import com.avalon.qrspringserver.model.Item;
+import com.avalon.qrspringserver.repository.CategoryRepository;
 import com.avalon.qrspringserver.repository.ItemRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,17 +10,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "items")
 public class ItemController {
     private final ItemRepository repository;
+    private final CategoryRepository categoryRepository;
 
-    public ItemController(ItemRepository repository) {
+    public ItemController(ItemRepository repository, CategoryRepository categoryRepository) {
         this.repository = repository;
+        this.categoryRepository = categoryRepository;
     }
 
-    @GetMapping(path = "")
-    List<Item> all() {
-        return repository.findAll();
+    @GetMapping(path = "categories/{id}/items")
+    List<Item> listAllItemsInCategory(@PathVariable String id) {
+        Category findCategory = categoryRepository.findById(id).orElseThrow();
+        return findCategory.getItems();
     }
 
     @GetMapping(path = "/{id}")

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -33,10 +32,8 @@ public class Item {
 
     @CreationTimestamp
     @Column(updatable = false)
-    @JsonIgnore
     private Date createdAt;
 
     @UpdateTimestamp
-    @JsonIgnore
     private Date updatedAt;
 }

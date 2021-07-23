@@ -23,8 +23,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Menu {
     private @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     String id;
 
     private String name;
@@ -33,7 +33,7 @@ public class Menu {
     private String description;
 
     @OneToMany
-    @JoinColumn(name = "PK_Category", nullable = false)
+    @JoinColumn(name = "PK_Category", nullable = true)
     private List<Category> categories;
 
     // images maybe
