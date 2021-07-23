@@ -1,7 +1,9 @@
 package com.avalon.qrspringserver.controller;
 
 import com.avalon.qrspringserver.model.Category;
+import com.avalon.qrspringserver.model.Menu;
 import com.avalon.qrspringserver.repository.CategoryRepository;
+import com.avalon.qrspringserver.repository.MenuRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.problem.Problem;
@@ -16,30 +18,38 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "categories")
 public class CategoryController {
     private final CategoryRepository repository;
+    private final MenuRepository menuRepository;
 
-    public CategoryController(CategoryRepository repository) {
+    public CategoryController(CategoryRepository repository, MenuRepository menuRepository) {
         this.repository = repository;
+        this.menuRepository = menuRepository;
     }
 
-    @GetMapping(path = "")
-    List<Category> all() {
-        return repository.findAll();
+    @GetMapping(path = "menus/{id}/categories")
+    List<Category> listAllMenuCategories(@PathVariable String id) {
+        Menu findMenu = menuRepository.findById(id).orElseThrow();
+        return findMenu.getCategories();
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "categories/{id}")
     Optional<Category> one(@PathVariable String id) {
         return repository.findById(id);
     }
 
-    @PostMapping(path = "")
-    Category post(@RequestBody Category body) {
-        return repository.save(body);
+    @PostMapping(path = "menus/{id}/categories")
+    ResponseEntity<?> post(@RequestBody Category body, @PathVariable String id) {
+        // else throw menu not found
+        Menu findMenu = menuRepository.findById(id).orElseThrow();
+        Category newCategory = repository.save(body);
+        findMenu.getCategories().add(newCategory);
+        menuRepository.save(findMenu);
+        // must be created
+        return ResponseEntity.ok("Created");
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "categories/{id}")
     ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) {
         ObjectMapper mapper = new ObjectMapper();
         Optional<Category> findCategory = repository.findById(id);

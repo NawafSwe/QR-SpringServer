@@ -41,6 +41,7 @@ public class MenuController {
 
     @PostMapping(path = "restaurants/{id}/menus")
     Menu post(@RequestBody Menu body, @PathVariable String id) {
+        // else throw restaurant not found
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
         Menu savedMenu = repository.save(body);
         restaurant.getMenus().add(savedMenu);
