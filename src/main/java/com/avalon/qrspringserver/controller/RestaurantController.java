@@ -6,6 +6,7 @@ import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
 import com.avalon.qrspringserver.utils.assembler.RestaurantAssembler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(path = "restaurants")
@@ -29,9 +34,9 @@ public class RestaurantController {
 
     @GetMapping(path = "")
     public ResponseEntity<?> all() {
+        List<EntityModel<Restaurant>> restaurants = repository.findAll().stream().map(assembler::toModel).collect(Collectors.toList());
         return ResponseEntity
-                .ok(repository.findAll().stream().map(assembler::toModel)
-                        .collect(Collectors.toList()));
+                .ok(CollectionModel.of(restaurants, linkTo(methodOn(RestaurantController.class).all()).withRel("Restaurants")));
     }
 
 

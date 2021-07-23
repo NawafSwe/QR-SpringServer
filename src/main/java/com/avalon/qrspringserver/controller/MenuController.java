@@ -7,6 +7,7 @@ import com.avalon.qrspringserver.repository.MenuRepository;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
 import com.avalon.qrspringserver.utils.assembler.MenuAssembler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.problem.Problem;
@@ -21,6 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 public class MenuController {
     private final MenuRepository repository;
@@ -34,11 +38,12 @@ public class MenuController {
     }
 
     @GetMapping(path = "restaurants/{id}/menus")
-    public List<EntityModel<Menu>> listAllRestaurantMenus(@PathVariable String id) {
+    public CollectionModel<EntityModel<Menu>> listAllRestaurantMenus(@PathVariable String id) {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new RestaurantNotFound("Restaurant with" + id + "not found"));
-
-        return restaurant.getMenus().stream().map(assembler::toModel).collect(Collectors.toList());
+        List<EntityModel<Menu>> menuCollectionModel = restaurant.getMenus().stream().map(assembler::toModel).collect(Collectors.toList());
+        return CollectionModel.of(menuCollectionModel,
+                linkTo(methodOn(MenuController.class).listAllRestaurantMenus(id)).withRel("menus"));
     }
 
     @GetMapping(path = "menus/{id}")
