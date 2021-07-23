@@ -1,5 +1,6 @@
 package com.avalon.qrspringserver.controller;
 
+import com.avalon.qrspringserver.error.restaurantErrors.RestaurantNotFound;
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,14 +27,25 @@ public class RestaurantController {
     }
 
     @GetMapping(path = "")
-    List<Restaurant> all() {
-        return repository.findAll();
+    ResponseEntity<?> all() {
+        try {
+            return ResponseEntity.ok(repository.findAll());
+        } catch (Exception error) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
+                    .body(Problem.create()
+                            .withTitle("Internal Server Error")
+                            .withDetail("Server cannot handle the request, if problem persist contact the team")
+                    );
+        }
     }
 
 
     @GetMapping(path = "/{id}")
-    Optional<Restaurant> one(@PathVariable String id) {
-        return repository.findById(id);
+    ResponseEntity<?> one(@PathVariable String id) {
+        Restaurant foundRestaurant = repository.findById(id).orElseThrow(() -> new RestaurantNotFound("Restaurant with " + id + " Not found"));
+        return ResponseEntity.ok(foundRestaurant);
     }
 
     @PostMapping(path = "")
