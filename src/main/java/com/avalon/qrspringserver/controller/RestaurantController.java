@@ -3,19 +3,14 @@ package com.avalon.qrspringserver.controller;
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import lombok.SneakyThrows;
-import org.apache.coyote.Response;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.xmlunit.validation.ValidationProblem;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -65,15 +60,14 @@ public class RestaurantController {
     @PutMapping(path = "/{id}")
     ResponseEntity<?> update(HttpServletRequest request, @PathVariable String id) {
         ObjectMapper mapper = new ObjectMapper();
-        Restaurant findRestaurant = repository.findById(id)
-                .orElseThrow();
+        Restaurant findRestaurant = repository.findById(id).orElseThrow();
         try {
             Restaurant updateRestaurant = mapper.readerForUpdating(findRestaurant).readValue(request.getReader());
             updateRestaurant.setUpdatedAt(new Date());
             repository.save(updateRestaurant);
             return ResponseEntity
                     .ok(updateRestaurant);
-        } catch (IOException error) {
+        } catch (Exception error) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
                     .body(Problem.create()

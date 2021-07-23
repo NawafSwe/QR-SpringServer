@@ -3,7 +3,6 @@ package com.avalon.qrspringserver.controller;
 import com.avalon.qrspringserver.model.Category;
 import com.avalon.qrspringserver.repository.CategoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.coyote.Response;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
