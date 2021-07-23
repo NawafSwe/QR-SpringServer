@@ -4,6 +4,7 @@ import com.avalon.qrspringserver.error.restaurantErrors.RestaurantDuplicatedEmai
 import com.avalon.qrspringserver.error.restaurantErrors.RestaurantNotFound;
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
+import com.avalon.qrspringserver.utils.assembler.RestaurantAssembler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.problem.Problem;
@@ -19,15 +20,17 @@ import java.util.Date;
 @RequestMapping(path = "restaurants")
 public class RestaurantController {
     private final RestaurantRepository repository;
+    private final RestaurantAssembler assembler;
 
-    public RestaurantController(RestaurantRepository repository) {
+    public RestaurantController(RestaurantRepository repository, RestaurantAssembler assembler) {
         this.repository = repository;
+        this.assembler = assembler;
 
     }
 
     @GetMapping(path = "")
     ResponseEntity<?> all() throws Exception {
-        return ResponseEntity.ok(repository.findAll());
+        return ResponseEntity.ok(repository.findAll().stream().map(assembler::toModel));
     }
 
 
@@ -42,6 +45,7 @@ public class RestaurantController {
         Restaurant foundRestaurant = repository.findByEmail(body.getEmail());
         if (foundRestaurant != null) throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
         Restaurant newRestaurant = repository.save(body);
+
         return ResponseEntity
                 .ok(newRestaurant);
     }
