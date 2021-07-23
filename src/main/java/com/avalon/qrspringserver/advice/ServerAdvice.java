@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class ServerAdvice {
     @ResponseBody
     @ExceptionHandler(ServerError.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Server Error")
     ResponseEntity<?> message() {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

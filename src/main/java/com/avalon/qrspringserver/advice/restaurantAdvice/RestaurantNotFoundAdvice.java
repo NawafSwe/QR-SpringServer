@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class RestaurantNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(RestaurantNotFound.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "restaurant could not be found")
     HashMap<String, String> message(String message) {
         HashMap<String, String> map = new HashMap<>();
         map.put("message", message);
