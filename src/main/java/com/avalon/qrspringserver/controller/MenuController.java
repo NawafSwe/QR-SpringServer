@@ -7,6 +7,7 @@ import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.MenuRepository;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.coyote.Response;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
@@ -40,44 +41,38 @@ public class MenuController {
     @GetMapping(path = "menus/{id}")
     public ResponseEntity<Menu> one(@PathVariable String id) {
         Menu foundMenu = repository.findById(id).orElseThrow(() -> new MenuNotFound("Menu with" + id + "not found"));
-
         return ResponseEntity
                 .ok(foundMenu);
     }
 
     @PostMapping(path = "restaurants/{id}/menus")
-    public Menu post(@RequestBody Menu body, @PathVariable String id) {
+    public ResponseEntity<?> post(@RequestBody Menu body, @PathVariable String id) {
         // else throw restaurant not found
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RestaurantNotFound("Restaurant with" + id + "not found"));
         Menu savedMenu = repository.save(body);
         restaurant.getMenus().add(savedMenu);
         restaurantRepository.save(restaurant);
-        return savedMenu;
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(restaurant);
     }
 
     @PutMapping(path = "menus/{id}")
-    public ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) {
-        try {
-            Menu findMenu = repository.findById(id).orElseThrow();
-            ObjectMapper mapper = new ObjectMapper();
-            Menu updatedMenu = mapper.readerForUpdating(findMenu).readValue(request.getReader());
-            updatedMenu.setUpdatedAt(new Date());
-            repository.save(updatedMenu);
-            return ResponseEntity
-                    .ok(updatedMenu);
-
-        } catch (Exception error) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
-                    .body(Problem.create()
-                            .withTitle("Internal Server Error")
-                            .withDetail("Error while mapping, internal server Error"));
-        }
+    public ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) throws Exception {
+        Menu findMenu = repository.findById(id).orElseThrow(() -> new MenuNotFound("Menu with" + id + "not found"));
+        ObjectMapper mapper = new ObjectMapper();
+        Menu updatedMenu = mapper.readerForUpdating(findMenu).readValue(request.getReader());
+        updatedMenu.setUpdatedAt(new Date());
+        repository.save(updatedMenu);
+        return ResponseEntity
+                .ok(updatedMenu);
     }
 
     @DeleteMapping(path = "menus/{id}")
-    public void delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         // make sure to find
         repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
