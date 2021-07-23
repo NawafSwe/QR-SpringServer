@@ -1,5 +1,6 @@
 package com.avalon.qrspringserver.controller;
 
+import com.avalon.qrspringserver.error.MenuErrors.MenuNotFound;
 import com.avalon.qrspringserver.error.restaurantErrors.RestaurantNotFound;
 import com.avalon.qrspringserver.model.Menu;
 import com.avalon.qrspringserver.model.Restaurant;
@@ -37,8 +38,11 @@ public class MenuController {
     }
 
     @GetMapping(path = "menus/{id}")
-    public Optional<Menu> one(@PathVariable String id) {
-        return repository.findById(id);
+    public ResponseEntity<Menu> one(@PathVariable String id) {
+        Menu foundMenu = repository.findById(id).orElseThrow(() -> new MenuNotFound("Menu with" + id + "not found"));
+
+        return ResponseEntity
+                .ok(foundMenu);
     }
 
     @PostMapping(path = "restaurants/{id}/menus")
