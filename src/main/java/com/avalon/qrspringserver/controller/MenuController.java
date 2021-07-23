@@ -1,10 +1,13 @@
 package com.avalon.qrspringserver.controller;
 
+import com.avalon.qrspringserver.error.restaurantErrors.RestaurantNotFound;
 import com.avalon.qrspringserver.model.Menu;
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.MenuRepository;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
+import com.avalon.qrspringserver.utils.assembler.MenuAssembler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
@@ -22,20 +25,24 @@ import java.util.stream.Collectors;
 public class MenuController {
     private final MenuRepository repository;
     private final RestaurantRepository restaurantRepository;
+    private final MenuAssembler assembler;
 
-    public MenuController(MenuRepository repository, RestaurantRepository restaurantRepository) {
+    public MenuController(MenuRepository repository, RestaurantRepository restaurantRepository, MenuAssembler assembler) {
         this.repository = repository;
         this.restaurantRepository = restaurantRepository;
+        this.assembler = assembler;
     }
 
     @GetMapping(path = "restaurants/{id}/menus")
-    public List<Menu> listAllRestaurantMenus(@PathVariable String id) {
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
-        return restaurant.getMenus();
+    public List<EntityModel<Menu>> listAllRestaurantMenus(@PathVariable String id) {
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RestaurantNotFound("Restaurant with" + id + "not found"));
+
+        return restaurant.getMenus().stream().map(assembler::toModel).collect(Collectors.toList());
     }
 
     @GetMapping(path = "menus/{id}")
-    Optional<Menu> one(@PathVariable String id) {
+    public Optional<Menu> one(@PathVariable String id) {
         return repository.findById(id);
     }
 

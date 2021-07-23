@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "restaurants")
@@ -28,7 +29,9 @@ public class RestaurantController {
 
     @GetMapping(path = "")
     public ResponseEntity<?> all() {
-        return ResponseEntity.ok(repository.findAll().stream().map(assembler::toModel));
+        return ResponseEntity
+                .ok(repository.findAll().stream().map(assembler::toModel)
+                        .collect(Collectors.toList()));
     }
 
 

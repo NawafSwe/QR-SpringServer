@@ -13,8 +13,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class MenuAssembler implements RepresentationModelAssembler<Menu, EntityModel<Menu>> {
     @Override
     public EntityModel<Menu> toModel(Menu entity) {
-        return EntityModel.of(entity,
-                linkTo(methodOn(MenuController.class).one(entity.getId())).withSelfRel()
-        );
+        return EntityModel.of(entity, linkTo(methodOn(MenuController.class).one(entity.getId())).withSelfRel());
     }
 }
