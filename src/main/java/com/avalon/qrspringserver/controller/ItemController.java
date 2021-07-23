@@ -66,7 +66,7 @@ public class ItemController {
         }
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "items/{id}")
     void delete(@PathVariable String id) {
         repository.deleteById(id);
     }
