@@ -68,8 +68,10 @@ public class RestaurantController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public void delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        repository.findById(id).orElseThrow(() -> new RestaurantNotFound("Restaurant with id: " + id + " is not found"));
         repository.deleteById(id);
+        return ResponseEntity.noContent().build();
 
     }
 }

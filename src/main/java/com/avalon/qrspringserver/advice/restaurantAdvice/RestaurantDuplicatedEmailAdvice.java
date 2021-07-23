@@ -15,10 +15,10 @@ public class RestaurantDuplicatedEmailAdvice {
     @ResponseBody
     @ExceptionHandler(RestaurantDuplicatedEmail.class)
     @ResponseStatus(value = HttpStatus.CONFLICT, reason = "Restaurant Email is Already in use")
-    HashMap<String, String> message() {
+    HashMap<String, String> message(RestaurantDuplicatedEmail ex) {
         HashMap<String, String> map = new HashMap<>();
         map.put("status", "409");
-        map.put("StatusText", HttpStatus.CONFLICT.name());
+        map.put("message", ex.getMessage());
         return map;
     }
 }
