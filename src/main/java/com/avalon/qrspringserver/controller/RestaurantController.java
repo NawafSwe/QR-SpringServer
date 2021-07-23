@@ -29,19 +29,19 @@ public class RestaurantController {
     }
 
     @GetMapping(path = "")
-    ResponseEntity<?> all() throws Exception {
+    public ResponseEntity<?> all() throws Exception {
         return ResponseEntity.ok(repository.findAll().stream().map(assembler::toModel));
     }
 
 
     @GetMapping(path = "/{id}")
-    ResponseEntity<?> one(@PathVariable String id) {
+    public ResponseEntity<?> one(@PathVariable String id) {
         Restaurant foundRestaurant = repository.findById(id).orElseThrow(() -> new RestaurantNotFound("Restaurant with " + id + " Not found"));
         return ResponseEntity.ok(foundRestaurant);
     }
 
     @PostMapping(path = "")
-    ResponseEntity<?> post(@RequestBody Restaurant body) throws RestaurantDuplicatedEmail {
+    public ResponseEntity<?> post(@RequestBody Restaurant body) throws RestaurantDuplicatedEmail {
         Restaurant foundRestaurant = repository.findByEmail(body.getEmail());
         if (foundRestaurant != null) throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
         Restaurant newRestaurant = repository.save(body);
@@ -51,7 +51,7 @@ public class RestaurantController {
     }
 
     @PutMapping(path = "/{id}")
-    ResponseEntity<?> update(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<?> update(HttpServletRequest request, @PathVariable String id) {
         ObjectMapper mapper = new ObjectMapper();
         Restaurant findRestaurant = repository.findById(id).orElseThrow();
         try {
@@ -70,7 +70,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping(path = "/{id}")
-    void delete(@PathVariable String id) {
+    public void delete(@PathVariable String id) {
         repository.deleteById(id);
 
     }
