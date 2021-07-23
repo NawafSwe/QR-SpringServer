@@ -4,9 +4,7 @@ import com.avalon.qrspringserver.error.restaurantErrors.RestaurantDuplicatedEmai
 import com.avalon.qrspringserver.error.restaurantErrors.RestaurantNotFound;
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
-import com.avalon.qrspringserver.utils.assembler.RestaurantAssembler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
