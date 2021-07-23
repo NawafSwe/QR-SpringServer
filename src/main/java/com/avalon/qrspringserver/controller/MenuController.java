@@ -40,14 +40,14 @@ public class MenuController {
         return savedMenu;
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "menus/{id}")
     Optional<Menu> put(@RequestBody Menu body, @PathVariable String id) {
         Optional<Menu> findMenu = repository.findById(id);
         // compare then save and return
         return findMenu;
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "menus/{id}")
     void delete(@PathVariable String id) {
         // make sure to find
         repository.deleteById(id);
