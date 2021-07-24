@@ -28,6 +28,7 @@ public class Item {
     private String description;
     private Float price;
     private Float calories;
+    private String name;
     // cannot set array of thing, it must be extracted to another class
     // private String[] images;
 
