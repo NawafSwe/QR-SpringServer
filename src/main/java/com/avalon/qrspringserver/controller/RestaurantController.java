@@ -28,8 +28,7 @@ public class RestaurantController {
     public ResponseEntity<?> all() {
         List<Restaurant> restaurants = repository.findAll();
         ServerResponse<List<Restaurant>> res = new ServerResponse<>(restaurants, HttpStatus.OK);
-        return ResponseEntity
-                .ok(res);
+        return res.sendResponse();
     }
 
     @GetMapping(path = "/{id}")
