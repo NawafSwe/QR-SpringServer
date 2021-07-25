@@ -1,6 +1,6 @@
 package com.avalon.qrspringserver.advice.MenuAdvice;
 
-import com.avalon.qrspringserver.error.MenuErrors.MenuNotFound;
+import com.avalon.qrspringserver.error.menuErrors.MenuNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

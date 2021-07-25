@@ -1,6 +1,6 @@
 package com.avalon.qrspringserver.controller;
 
-import com.avalon.qrspringserver.error.MenuErrors.MenuNotFound;
+import com.avalon.qrspringserver.error.menuErrors.MenuNotFound;
 import com.avalon.qrspringserver.error.restaurantErrors.RestaurantNotFound;
 import com.avalon.qrspringserver.model.Menu;
 import com.avalon.qrspringserver.model.Restaurant;

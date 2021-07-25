@@ -1,8 +1,10 @@
-package com.avalon.qrspringserver.error.MenuErrors;
+package com.avalon.qrspringserver.error.categoryErrors;
 
-public class MenuNotFound extends RuntimeException{
+public class CategoryNotFound extends RuntimeException {
+
     private final String message;
-    public MenuNotFound(String message){
+
+    public CategoryNotFound(String message) {
         super(message);
         this.message = message;
     }
