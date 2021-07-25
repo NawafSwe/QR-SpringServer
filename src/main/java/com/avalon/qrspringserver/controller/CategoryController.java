@@ -1,5 +1,6 @@
 package com.avalon.qrspringserver.controller;
 
+import com.avalon.qrspringserver.error.categoryErrors.CategoryNotFound;
 import com.avalon.qrspringserver.error.menuErrors.MenuNotFound;
 import com.avalon.qrspringserver.model.Category;
 import com.avalon.qrspringserver.model.Menu;
@@ -37,9 +38,10 @@ public class CategoryController {
     }
 
     @GetMapping(path = "categories/{id}")
-    Optional<Category> one(@PathVariable String id) {
-
-        return repository.findById(id);
+    ResponseEntity<?> one(@PathVariable String id) {
+        Category foundCategory = repository.findById(id)
+                .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " was not found"));
+        return ResponseEntity.ok(foundCategory);
     }
 
 
