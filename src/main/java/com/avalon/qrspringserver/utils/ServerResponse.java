@@ -1,26 +1,30 @@
 package com.avalon.qrspringserver.utils;
 
+import org.hibernate.mapping.Any;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ServerResponse<T> {
     private final T data;
-    private final int status;
-    private final List<?> errors;
+    private final HttpStatus status;
+    private final LinkedList<String> errors;
 
-    public ServerResponse(T data, int status, List<?> errors) {
+
+    public ServerResponse(T data, HttpStatus status) {
         this.data = data;
         this.status = status;
-        this.errors = errors;
+        this.errors = new LinkedList<String>();
+
+
     }
 
-    public int getStatus() {
+    public HttpStatus getStatus() {
         return status;
     }
 
-    public List<?> getErrors() {
+    public LinkedList<String> getErrors() {
         return errors;
     }
 
@@ -31,10 +35,11 @@ public class ServerResponse<T> {
 
     @Override
     public String toString() {
-        return "ServerResponse{" +
-                "data=" + data +
-                ", status=" + status +
+        return "{" +
+                "data:" + data +
+                ", status:" + status +
                 ", errors=" + errors +
+
                 '}';
     }
 
@@ -43,7 +48,7 @@ public class ServerResponse<T> {
         return Objects.hash(data, status, errors);
     }
 
-    public ResponseEntity<ServerResponse> sendResponse() {
+    public ResponseEntity<?> sendResponse() {
         return ResponseEntity
                 .status(this.status)
                 .body(this);

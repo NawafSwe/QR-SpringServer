@@ -4,6 +4,7 @@ import com.avalon.qrspringserver.error.restaurantErrors.RestaurantDuplicatedEmai
 import com.avalon.qrspringserver.error.restaurantErrors.RestaurantNotFound;
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
+import com.avalon.qrspringserver.utils.ServerResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,9 @@ public class RestaurantController {
     @GetMapping(path = "")
     public ResponseEntity<?> all() {
         List<Restaurant> restaurants = repository.findAll();
+        ServerResponse<List<Restaurant>> res = new ServerResponse<>(restaurants, HttpStatus.OK);
         return ResponseEntity
-                .ok(restaurants);
+                .ok(res);
     }
 
     @GetMapping(path = "/{id}")
