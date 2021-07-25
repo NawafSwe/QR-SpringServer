@@ -23,6 +23,7 @@ public class Restaurant {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Id
     String id;
+    @Column(nullable = false)
     private String name;
     @OneToMany
     @JoinColumn(name = "PK_Menu", nullable = true)
