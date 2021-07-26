@@ -33,6 +33,7 @@ public class RestaurantController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> one(@PathVariable String id) {
+
         Restaurant foundRestaurant = repository.findById(id).orElseThrow(() -> new RestaurantNotFound("Restaurant with " + id + " Not found"));
         return ResponseEntity.ok(foundRestaurant);
     }
