@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class CategoryController {
@@ -58,21 +57,14 @@ public class CategoryController {
     }
 
     @PutMapping(path = "categories/{id}")
-    ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) {
+    ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) throws Exception{
         ObjectMapper mapper = new ObjectMapper();
         Category findCategory = repository.findById(id)
                 .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found"));
-        try {
-            Category updatedCategory = mapper.readerForUpdating(findCategory).readValue(request.getReader());
-           Category savedCategory =  repository.save(updatedCategory);
-            return ResponseEntity.ok(savedCategory);
-        } catch (IOException error) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
-                    .body(Problem.create()
-                            .withTitle("Internal Server Error")
-                            .withDetail("Error while mapping, internal server Error"));
-        }
+        Category updatedCategory = mapper.readerForUpdating(findCategory).readValue(request.getReader());
+        Category savedCategory = repository.save(updatedCategory);
+        return ResponseEntity.ok(savedCategory);
+
 
     }
 
