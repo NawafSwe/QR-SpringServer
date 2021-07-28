@@ -7,15 +7,10 @@ import com.avalon.qrspringserver.model.Menu;
 import com.avalon.qrspringserver.repository.CategoryRepository;
 import com.avalon.qrspringserver.repository.MenuRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.mediatype.problem.Problem;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -51,20 +46,21 @@ public class CategoryController {
                 .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found"));
         Category newCategory = repository.save(body);
         findMenu.getCategories().add(newCategory);
-        menuRepository.save(findMenu);
+        Menu SavedMenu = menuRepository.save(findMenu);
         // must be created
-        return ResponseEntity.ok("Created");
+        return ResponseEntity.ok(SavedMenu);
     }
 
     @PutMapping(path = "categories/{id}")
-    ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) throws Exception{
+    ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
+        System.out.println("id is " + id);
         Category findCategory = repository.findById(id)
                 .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found"));
+        System.out.println(findCategory);
         Category updatedCategory = mapper.readerForUpdating(findCategory).readValue(request.getReader());
         Category savedCategory = repository.save(updatedCategory);
         return ResponseEntity.ok(savedCategory);
-
 
     }
 

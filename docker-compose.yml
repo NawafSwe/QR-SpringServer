@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
       context: .
     container_name: qr-app
+    volumes:
+      - .:/app
     depends_on:
       - db
     restart: always
