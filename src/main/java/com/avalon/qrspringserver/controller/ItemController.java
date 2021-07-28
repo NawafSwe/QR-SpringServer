@@ -1,5 +1,7 @@
 package com.avalon.qrspringserver.controller;
 
+import com.avalon.qrspringserver.error.categoryErrors.CategoryNotFound;
+import com.avalon.qrspringserver.error.itemErrors.ItemNotFound;
 import com.avalon.qrspringserver.model.Category;
 import com.avalon.qrspringserver.model.Item;
 import com.avalon.qrspringserver.repository.CategoryRepository;
@@ -28,19 +30,23 @@ public class ItemController {
     }
 
     @GetMapping(path = "categories/{id}/items")
-    List<Item> listAllItemsInCategory(@PathVariable String id) {
-        Category findCategory = categoryRepository.findById(id).orElseThrow();
-        return findCategory.getItems();
+    public ResponseEntity<?> listAllItemsInCategory(@PathVariable String id) {
+        Category findCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found"));
+        return ResponseEntity.ok(findCategory.getItems());
     }
 
     @GetMapping(path = "items/{id}")
-    Optional<Item> one(@PathVariable String id) {
-        return repository.findById(id);
+    public ResponseEntity<?> one(@PathVariable String id) {
+        Item foundItem = repository.findById(id)
+                .orElseThrow(() -> new ItemNotFound("Item with id: " + id + " Not found"));
+        return ResponseEntity.ok(foundItem);
     }
 
     @PostMapping(path = "categories/{id}/items")
     ResponseEntity<?> post(@RequestBody Item body, @PathVariable String id) {
-        Category findCategory = categoryRepository.findById(id).orElseThrow();
+        Category findCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found"));
         Item savedItem = repository.save(body);
         findCategory.getItems().add(savedItem);
         categoryRepository.save(findCategory);
@@ -48,9 +54,10 @@ public class ItemController {
     }
 
     @PutMapping(path = "items/{id}")
-    ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) {
+    public ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) {
         try {
-            Item foundItem = repository.findById(id).orElseThrow();
+            Item foundItem = repository.findById(id)
+                    .orElseThrow(() -> new ItemNotFound("Item with id: " + id + " Not found"));
             ObjectMapper mapper = new ObjectMapper();
             Item updatedItem = mapper.readerForUpdating(foundItem).readValue(request.getReader());
             updatedItem.setUpdatedAt(new Date());
@@ -67,7 +74,8 @@ public class ItemController {
     }
 
     @DeleteMapping(path = "items/{id}")
-    void delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
