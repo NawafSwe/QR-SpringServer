@@ -3,14 +3,10 @@ version: '3.8'
 services:
   app:
     image: openjdk:11
-    # to build app.jar
-    command: sh -c "./mvnw clean package -DskipTests"
     build:
       dockerfile: Dockerfile
       context: .
     container_name: qr-app
-    volumes:
-      - /tmp
     depends_on:
       - db
     restart: always
