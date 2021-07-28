@@ -8,6 +8,7 @@ services:
     container_name: qr-app
     volumes:
       - .:/app
+      - .:/usr/app/src
     depends_on:
       - db
     restart: always
@@ -35,3 +36,4 @@ services:
 networks:
   app-network:
     driver: bridge
+
