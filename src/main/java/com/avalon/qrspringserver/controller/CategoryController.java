@@ -64,8 +64,8 @@ public class CategoryController {
                 .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found"));
         try {
             Category updatedCategory = mapper.readerForUpdating(findCategory).readValue(request.getReader());
-            repository.save(updatedCategory);
-            return ResponseEntity.ok(updatedCategory);
+           Category savedCategory =  repository.save(updatedCategory);
+            return ResponseEntity.ok(savedCategory);
         } catch (IOException error) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
