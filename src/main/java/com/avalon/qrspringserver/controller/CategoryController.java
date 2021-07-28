@@ -48,7 +48,8 @@ public class CategoryController {
     @PostMapping(path = "menus/{id}/categories")
     ResponseEntity<?> post(@RequestBody Category body, @PathVariable String id) {
         // else throw menu not found
-        Menu findMenu = menuRepository.findById(id).orElseThrow();
+        Menu findMenu = menuRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found"));
         Category newCategory = repository.save(body);
         findMenu.getCategories().add(newCategory);
         menuRepository.save(findMenu);
@@ -59,7 +60,8 @@ public class CategoryController {
     @PutMapping(path = "categories/{id}")
     ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) {
         ObjectMapper mapper = new ObjectMapper();
-        Optional<Category> findCategory = repository.findById(id);
+        Category findCategory = repository.findById(id)
+                .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found"));
         try {
             Category updatedCategory = mapper.readerForUpdating(findCategory).readValue(request.getReader());
             repository.save(updatedCategory);
@@ -75,7 +77,8 @@ public class CategoryController {
     }
 
     @DeleteMapping(path = "/{id}")
-    void delete(@PathVariable String id) {
+    ResponseEntity<?> delete(@PathVariable String id) {
         repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
