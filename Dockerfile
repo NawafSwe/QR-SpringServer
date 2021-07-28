@@ -4,7 +4,7 @@ COPY src /usr/app/src
 COPY pom.xml /usr/app
 RUN mvn clean install -DskipTests -f /usr/app/pom.xml
 
-#build app 
+#build app
 FROM openjdk:11
 COPY --from=build usr/app/target/.*jar  /app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
