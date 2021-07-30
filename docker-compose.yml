@@ -2,16 +2,16 @@ version: '3.8'
 
 services:
   app:
+    image: openjdk:11
     build:
-      dockerfile: Dockerfile
       context: .
     container_name: qr-app
     volumes:
-      - .:/app
-      - .:/usr/app/src
+      - ./:/usr/app/
+    command: ./mvnw spring-boot:run
     depends_on:
       - db
-    restart: always
+    restart: unless-stopped
     ports:
       - '6060:6060'
     environment:
@@ -24,6 +24,9 @@ services:
   db:
     image: 'postgres:13.1-alpine'
     container_name: db
+    volumes:
+      - psqldata:/var/lib/psql
+      - psqlconfig:/ect/psql/conf.d
     environment:
       - POSTGRES_USER=compose-postgres
       - POSTGRES_PASSWORD=compose-postgres
@@ -37,3 +40,6 @@ networks:
   app-network:
     driver: bridge
 
+volumes:
+  psqlconfig:
+  psqldata:
