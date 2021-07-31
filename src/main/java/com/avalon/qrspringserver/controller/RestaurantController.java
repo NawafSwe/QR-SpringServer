@@ -49,14 +49,6 @@ public class RestaurantController {
         if (foundRestaurant != null) {
             throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
         }
-        // the strategy we use bcrypt
-        String idForEncode = "bcrypt";
-        Map encoders = new HashMap<>();
-        encoders.put(idForEncode, new BCryptPasswordEncoder());
-        encoders.put("pbkdf2", new Pbkdf2PasswordEncoder());
-        encoders.put("scrypt", new SCryptPasswordEncoder());
-        PasswordEncoder passwordEncoder =
-                new DelegatingPasswordEncoder(idForEncode, encoders);
         Restaurant newRestaurant = repository.save(body);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
