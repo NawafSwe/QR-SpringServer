@@ -8,11 +8,16 @@ import com.avalon.qrspringserver.utils.ServerResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.*;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "restaurants")
@@ -44,6 +49,14 @@ public class RestaurantController {
         if (foundRestaurant != null) {
             throw new RestaurantDuplicatedEmail("this restaurant email is already exits");
         }
+        // the strategy we use bcrypt
+        String idForEncode = "bcrypt";
+        Map encoders = new HashMap<>();
+        encoders.put(idForEncode, new BCryptPasswordEncoder());
+        encoders.put("pbkdf2", new Pbkdf2PasswordEncoder());
+        encoders.put("scrypt", new SCryptPasswordEncoder());
+        PasswordEncoder passwordEncoder =
+                new DelegatingPasswordEncoder(idForEncode, encoders);
         Restaurant newRestaurant = repository.save(body);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
