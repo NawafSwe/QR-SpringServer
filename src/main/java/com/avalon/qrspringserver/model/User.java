@@ -36,7 +36,7 @@ public class User {
     @CreationTimestamp
     private Date joinedAt;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "rest_PK", nullable = false)
     private Restaurant restaurant;
 }
