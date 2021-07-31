@@ -54,9 +54,8 @@ public class CategoryController {
     @PutMapping(path = "categories/{id}")
     ResponseEntity<?> put(HttpServletRequest request, @PathVariable String id) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        System.out.println("id is " + id);
         Category findCategory = repository.findById(id)
-                .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found"));
+                .orElseThrow(() -> new CategoryNotFound("Category with id: " + id + " Not Found !"));
         System.out.println(findCategory);
         Category updatedCategory = mapper.readerForUpdating(findCategory).readValue(request.getReader());
         Category savedCategory = repository.save(updatedCategory);

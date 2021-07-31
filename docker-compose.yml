@@ -5,10 +5,10 @@ services:
     image: openjdk:11
     build:
       context: .
-    container_name: qr-app
+    container_name: qr-container
     volumes:
       - ./:/usr/app/
-    command: ./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    command: ./mvnw clean spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
     depends_on:
       - db
     restart: unless-stopped
