@@ -41,6 +41,4 @@ public class Restaurant {
     private Date createdAt;
     @UpdateTimestamp
     private Date updatedAt;
-
-
 }

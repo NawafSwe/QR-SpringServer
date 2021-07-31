@@ -17,15 +17,13 @@ import java.util.HashMap;
 public class CategoryNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(CategoryNotFound.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Category was not found")
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Category was not found!")
     public ResponseEntity<?> response() {
         HashMap<String, String> map = new HashMap<>();
         map.put("status", HttpStatus.NOT_FOUND.name());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
                 .body(Problem.create()
-                        .withTitle("Not Found Error")
-                        .withDetail("Category was not found")
                         .withProperties(map)
                 );
     }
