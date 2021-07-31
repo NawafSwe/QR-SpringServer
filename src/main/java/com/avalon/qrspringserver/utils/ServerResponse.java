@@ -1,6 +1,5 @@
 package com.avalon.qrspringserver.utils;
 
-import org.hibernate.mapping.Any;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
