@@ -61,6 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(SIGN_UP_URL, "/users/api/secure");
+        web.ignoring().antMatchers(SIGN_UP_URL);
     }
 }
