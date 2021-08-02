@@ -43,6 +43,10 @@ public class Restaurant {
     private Date updatedAt;
 
     @OneToMany
-    @JoinColumn(name = "userPK", nullable = false)
+    @JoinColumn(name = "userPK", nullable = true)
     private List<UserModel> users;
+
+    @OneToOne
+    @JoinColumn(name = "adminPK", nullable = false)
+    private Admin admin;
 }
