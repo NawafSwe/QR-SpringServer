@@ -18,7 +18,7 @@ import java.util.Date;
 @ToString
 @Table(name = "User")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class UserModel {
     private
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")

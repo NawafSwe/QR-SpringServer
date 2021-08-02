@@ -16,5 +16,5 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Admin")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Admin extends User {
+public class Admin extends UserModel {
 }
