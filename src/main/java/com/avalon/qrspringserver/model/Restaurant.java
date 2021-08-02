@@ -41,4 +41,8 @@ public class Restaurant {
     private Date createdAt;
     @UpdateTimestamp
     private Date updatedAt;
+
+    @OneToMany
+    @JoinColumn(name = "userPK", nullable = false)
+    private List<UserModel> users;
 }
