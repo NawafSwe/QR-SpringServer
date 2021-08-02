@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static com.avalon.qrspringserver.security.SecurityConstants.KEY;
 import static org.springframework.boot.web.servlet.filter.ApplicationContextHeaderFilter.HEADER_NAME;
@@ -32,10 +33,8 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
         UsernamePasswordAuthenticationToken authentication = authenticate(req);
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
-
     }
 
     private UsernamePasswordAuthenticationToken authenticate(HttpServletRequest req) {
@@ -44,8 +43,8 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             Claims user = Jwts.parser()
                     .setSigningKey(Keys.hmacShaKeyFor(KEY.getBytes()))
                     .parseClaimsJws(token).getBody();
-            if(user != null){
-
+            if (user != null) {
+                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
             }
         }
         return null;
