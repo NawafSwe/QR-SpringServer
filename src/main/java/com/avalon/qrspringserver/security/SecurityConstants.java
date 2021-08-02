@@ -1,8 +1,8 @@
 package com.avalon.qrspringserver.security;
 
 public class SecurityConstants {
-    public static final String SIGN_UP_URL = "/users";
-    public static final String KEY = "q3t6w9z$C&F)J@NcQfTjWnZr4u7x!A%D*G-KaPdSgUkXp2s5v8y/B?E(H+MbQeTh";
+    public static final String SIGN_UP_URL = "/login";
+    public static final String KEY = "@#!><QR-server-593490284572091394-spring-40399342304953-java@@-spring@@-34@#$^&$#@%^&^%$#@";
     public static final String HEADER_NAME = "Authorization";
     public static final Long EXPIRATION_TIME = 1000L * 60 * 30;
 }

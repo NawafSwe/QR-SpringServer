@@ -17,15 +17,15 @@ public class UserController {
         this.security = security;
     }
 
+
     @PostMapping(path = "")
-    public UserModel postUser(@RequestBody UserModel user) {
+    public String postUser(@RequestBody UserModel user) {
         // TODO: check user db if email exist
         user.setPassword(security.encoder().encode(user.getPassword()));
         // TODO: send user with jwt
-
         // register user
         userRepository.save(user);
-        return user;
+        return "Created";
     }
 
     // users/api/secure
