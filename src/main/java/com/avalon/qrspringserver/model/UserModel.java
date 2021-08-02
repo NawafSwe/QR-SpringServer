@@ -35,8 +35,4 @@ public class UserModel {
 
     @CreationTimestamp
     private Date joinedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "rest_PK", nullable = true)
-    private Restaurant restaurant;
 }
