@@ -19,8 +19,7 @@ import javax.persistence.Table;
 @Table(name = "Admin")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Admin extends UserModel {
-
     @OneToOne
-    @JoinColumn(name = "rest_PK", nullable = false)
+    @JoinColumn(name = "rest_PK", nullable = true)
     private Restaurant restaurant;
 }
