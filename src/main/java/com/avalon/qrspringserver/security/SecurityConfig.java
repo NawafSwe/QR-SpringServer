@@ -36,10 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // we can supply many patterns
-        http.cors()
-                .and().csrf()
-                .disable().authorizeRequests()
+        http.cors().and().csrf().disable().authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager()))
@@ -51,18 +48,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/users", new CorsConfiguration().applyPermitDefaultValues());
+
+        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+
         return source;
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(this.encoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-                .antMatchers(HttpMethod.POST, "/users");
+        web.ignoring().antMatchers(SIGN_UP_URL, "/users/api/secure");
     }
 }

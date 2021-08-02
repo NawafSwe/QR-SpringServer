@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.avalon.qrspringserver.security.SecurityConstants.KEY;
-import static org.springframework.boot.web.servlet.filter.ApplicationContextHeaderFilter.HEADER_NAME;
+import static com.avalon.qrspringserver.security.SecurityConstants.HEADER_NAME;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
     public AuthorizationFilter(AuthenticationManager authManager) {
