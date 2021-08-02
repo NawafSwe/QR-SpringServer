@@ -3,7 +3,12 @@ package com.avalon.qrspringserver.controller;
 import com.avalon.qrspringserver.model.UserModel;
 import com.avalon.qrspringserver.repository.UserRepository;
 import com.avalon.qrspringserver.security.SecurityConfig;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static com.avalon.qrspringserver.security.SecurityConstants.HEADER_NAME;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -17,15 +22,15 @@ public class UserController {
         this.security = security;
     }
 
-    @PostMapping(path = "")
-    public UserModel postUser(@RequestBody UserModel user) {
+
+    @PostMapping(path = "/register")
+    public String postUser(@RequestBody UserModel user) {
         // TODO: check user db if email exist
         user.setPassword(security.encoder().encode(user.getPassword()));
         // TODO: send user with jwt
-
         // register user
         userRepository.save(user);
-        return user;
+        return "Registered";
     }
 
     // users/api/secure
@@ -33,4 +38,5 @@ public class UserController {
     public String secure() {
         return "You are authenticated";
     }
+
 }

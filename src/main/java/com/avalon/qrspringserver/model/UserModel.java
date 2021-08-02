@@ -16,7 +16,7 @@ import java.util.Date;
 @Setter
 @Entity
 @ToString
-@Table(name = "User")
+@Table(name = "UserModel")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserModel {
     private
@@ -37,6 +37,6 @@ public class UserModel {
     private Date joinedAt;
 
     @ManyToOne
-    @JoinColumn(name = "rest_PK", nullable = false)
+    @JoinColumn(name = "rest_PK", nullable = true)
     private Restaurant restaurant;
 }

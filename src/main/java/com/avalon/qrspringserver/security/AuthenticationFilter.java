@@ -50,6 +50,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
         Date expiration = new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME);
         Key key = Keys.hmacShaKeyFor(KEY.getBytes());
+        System.out.println(auth.toString());
         Claims claims = Jwts.claims().setSubject(((User) auth.getPrincipal()).getUsername());
         String token = Jwts.builder().setClaims(claims).signWith(key, SignatureAlgorithm.HS512).setExpiration(expiration).compact();
         res.addHeader("token", token);
