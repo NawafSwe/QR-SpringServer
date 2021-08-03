@@ -1,6 +1,5 @@
 package com.avalon.qrspringserver.security;
 
-import com.avalon.qrspringserver.error.userErrors.UserNotAuthenticated;
 import com.avalon.qrspringserver.model.UserModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
