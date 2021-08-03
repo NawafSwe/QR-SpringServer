@@ -4,23 +4,18 @@ import com.avalon.qrspringserver.error.userErrors.UserDuplicatedEmail;
 import com.avalon.qrspringserver.model.Admin;
 import com.avalon.qrspringserver.model.Restaurant;
 import com.avalon.qrspringserver.model.UserModel;
+import com.avalon.qrspringserver.repository.AdminRepository;
 import com.avalon.qrspringserver.repository.RestaurantRepository;
 import com.avalon.qrspringserver.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 import static com.avalon.qrspringserver.security.SecurityConstants.HEADER_NAME;
-import static com.avalon.qrspringserver.security.SecurityConstants.KEY;
+
 
 @RestController
 @RequestMapping(path = "/users")
@@ -29,11 +24,13 @@ public class UserController {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final RestaurantRepository restaurantRepository;
+    private final AdminRepository adminRepository;
 
-    public UserController(UserRepository userRepository, RestaurantRepository restaurantRepository) {
+    public UserController(UserRepository userRepository, RestaurantRepository restaurantRepository, AdminRepository adminRepository) {
         this.userRepository = userRepository;
         this.encoder = new BCryptPasswordEncoder();
         this.restaurantRepository = restaurantRepository;
+        this.adminRepository = adminRepository;
     }
 
     /**
@@ -42,10 +39,14 @@ public class UserController {
      * then find restaurant and add user then save it into restaurant
      */
     @PostMapping(path = "/register")
-    public String postUser(@RequestBody UserModel user) {
-        System.out.println("++++++++++++++ CONTEXT ++++++++++++++ ");
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
-        System.out.println("++++++++++++++ CONTEXT ++++++++++++++ ");
+    public String postUser(@RequestBody UserModel user, HttpServletRequest req) {
+        String[] chunks = req.getHeader(HEADER_NAME).split("\\.");
+        Base64.Decoder decoder = Base64.getDecoder();
+        // payload contains the email of the user
+        String payload = new String(decoder.decode(chunks[1]));
+        payload = payload.substring(payload.indexOf(":") + 1, payload.indexOf(","));
+        payload = payload.substring(1, payload.length() - 1);
+        Admin findAdmin = adminRepository.findAdminByEmail(payload);
         UserModel findUser = userRepository.findUserByEmail(user.getEmail());
         if (findUser != null) {
             throw new UserDuplicatedEmail("given user email is already in user");
@@ -54,12 +55,11 @@ public class UserController {
             // register user
             userRepository.save(user);
             // add user to restaurant
-
-            //     restaurantRepository.save();
-            return "Registered";
+            findAdmin.getRestaurant().getUsers().add(user);
+            restaurantRepository.save(findAdmin.getRestaurant());
+            adminRepository.save(findAdmin);
+            return "user Added to restaurant successfully";
         }
-
-
     }
 
     /**
@@ -81,7 +81,6 @@ public class UserController {
             // set restaurant admin
             admin.setRestaurant(holdRestaurant);
             restaurantRepository.save(holdRestaurant);
-            holdRestaurant = null;
             // save restaurant with all info
             restaurantRepository.save(admin.getRestaurant());
             // save admin again
