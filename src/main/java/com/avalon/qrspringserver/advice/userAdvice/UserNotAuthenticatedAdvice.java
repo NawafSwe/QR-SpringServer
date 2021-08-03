@@ -2,6 +2,7 @@ package com.avalon.qrspringserver.advice.userAdvice;
 
 import com.avalon.qrspringserver.error.userErrors.UserDuplicatedEmail;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class UserNotAuthenticatedAdvice {
 
     @ResponseBody
-    @ExceptionHandler(UserDuplicatedEmail.class)
+    @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "User unauthorized please login")
     public Map<String, String> res(UserDuplicatedEmail ex) {
         HashMap<String, String> map = new HashMap<>();

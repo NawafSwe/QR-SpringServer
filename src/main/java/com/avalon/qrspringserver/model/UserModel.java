@@ -35,4 +35,5 @@ public class UserModel {
 
     @CreationTimestamp
     private Date joinedAt;
+
 }
