@@ -35,5 +35,5 @@ public class UserModel {
 
     @CreationTimestamp
     private Date joinedAt;
-
+    private boolean _admin = false;
 }
