@@ -13,4 +13,4 @@ public class UserNotAuthenticated extends RuntimeException {
         return message;
     }
 }
-}
+
