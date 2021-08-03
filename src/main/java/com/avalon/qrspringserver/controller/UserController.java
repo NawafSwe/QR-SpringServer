@@ -60,7 +60,7 @@ public class UserController {
      */
 
     // users/api/secure
-    @GetMapping(path = "admin/register")
+    @PostMapping(path = "/admin/register")
     public String registerAdminWithRestaurant(@RequestBody Admin admin) {
         UserModel findUser = userRepository.findUserByEmail(admin.getEmail());
         if (findUser != null) {
