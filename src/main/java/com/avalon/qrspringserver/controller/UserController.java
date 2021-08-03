@@ -1,27 +1,27 @@
 package com.avalon.qrspringserver.controller;
 
+import com.avalon.qrspringserver.model.Admin;
 import com.avalon.qrspringserver.model.UserModel;
+import com.avalon.qrspringserver.repository.RestaurantRepository;
 import com.avalon.qrspringserver.repository.UserRepository;
-import com.avalon.qrspringserver.security.SecurityConfig;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
-import static com.avalon.qrspringserver.security.SecurityConstants.HEADER_NAME;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/users")
 public class UserController {
 
     private final UserRepository userRepository;
-    private final SecurityConfig security;
+    private final BCryptPasswordEncoder encoder;
+    private final RestaurantRepository restaurantRepository;
 
-    public UserController(UserRepository userRepository, SecurityConfig security) {
+    public UserController(UserRepository userRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
-        this.security = security;
+        this.encoder = new BCryptPasswordEncoder();
+        this.restaurantRepository = restaurantRepository;
     }
-
 
     /**
      * @description register normal user by admin
@@ -31,11 +31,17 @@ public class UserController {
     @PostMapping(path = "/register")
     public String postUser(@RequestBody UserModel user) {
         // TODO: check user db if email exist
-        user.setPassword(security.encoder().encode(user.getPassword()));
-        // TODO: send user with jwt
-        // register user
-        userRepository.save(user);
-        return "Registered";
+        UserModel findUser = userRepository.findUserByEmail(user.getEmail());
+        if (findUser != null) {
+            // throw an error
+            return "User is already exist";
+        } else {
+            user.setPassword(encoder.encode(user.getPassword()));
+            // TODO: send user with jwt
+            // register user
+            userRepository.save(user);
+            return "Registered";
+        }
     }
 
     /**
@@ -43,9 +49,30 @@ public class UserController {
      */
 
     // users/api/secure
-    @GetMapping(path = "/api/secure")
-    public String secure() {
-        return "You are authenticated";
+    @GetMapping(path = "admin/register")
+    public String registerAdminWithRestaurant(@RequestBody Admin admin) {
+        // TODO: check user db if email exist
+        UserModel findUser = userRepository.findUserByEmail(admin.getEmail());
+        if (findUser != null) {
+            // throw an error
+            return "User is already exist";
+        } else {
+            admin.setPassword(encoder.encode(admin.getPassword()));
+            // TODO: send user with jwt
+            // register admin
+            userRepository.save(admin);
+            // set restaurant admin
+            admin.getRestaurant().setAdmin(admin);
+            // save restaurant with all info
+            restaurantRepository.save(admin.getRestaurant());
+            return "Registered";
+        }
+    }
+
+
+    @GetMapping(path = "api/v/secure/getAllUsers")
+    public List<UserModel> getAllUsers() {
+        return userRepository.findAll();
     }
 
 }
