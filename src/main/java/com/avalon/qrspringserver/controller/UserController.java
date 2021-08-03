@@ -23,6 +23,11 @@ public class UserController {
     }
 
 
+    /**
+     * @description register normal user by admin
+     * it requires an authentication by the admin // need to be moved into the restaurant controller, we need to pass the email or id of restaurant
+     * then find restaurant and add user then save it into restaurant
+     */
     @PostMapping(path = "/register")
     public String postUser(@RequestBody UserModel user) {
         // TODO: check user db if email exist
@@ -32,6 +37,10 @@ public class UserController {
         userRepository.save(user);
         return "Registered";
     }
+
+    /**
+     * @description register user of type admin
+     */
 
     // users/api/secure
     @GetMapping(path = "/api/secure")
